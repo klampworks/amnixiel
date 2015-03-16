@@ -21,8 +21,7 @@
         (let [ssid (xml1-> m :SSID)]
             (merge
                 {:essid (text (xml1-> ssid :essid))
-                 :encryption (reduce #(str %1 (text %2) ";") 
-                                     "" (xml-> ssid :encryption))}))))
+                 :encryption (map text (xml-> ssid :encryption))}))))
     
 (defn main [f]
     (def root (-> f io/resource io/file 

@@ -16,23 +16,26 @@
         (let [^SAXParser parser (.newSAXParser factory)]
             (.parse parser s ch))))
 
+(defn parse-ssid-block [m]
+    (into {}
+        (let [ssid (xml1-> m :SSID)]
+            (merge
+                {:essid (text (xml1-> ssid :essid))
+                 :encryption (reduce #(str %1 (text %2) ";") 
+                                     "" (xml-> ssid :encryption))}))))
+    
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (into {}
           (for [m (xml-> root :wireless-network)]
-                  {
-                   :first-time (attr m :first-time)
-                   :last-time (attr m :last-time) 
-                   :bssid (text (xml1-> m :BSSID))
-                   })))
+                  (merge {:first-time (attr m :first-time)
+                          :last-time (attr m :last-time) 
+                          :bssid (text (xml1-> m :BSSID))
+                          :channel (text (xml1-> m :channel))} 
+                         (parse-ssid-block m)))))
 
 (println "\n")
 (main "test-mini.xml")
 (println "\n")
-
-(comment
-    (zip-xml/xml-> root :head :meta)
-    (keyword (zip-xml/attr m :type))
-    (zip-xml/text m))
 

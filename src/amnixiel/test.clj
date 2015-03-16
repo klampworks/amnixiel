@@ -15,15 +15,15 @@
         (let [^SAXParser parser (.newSAXParser factory)]
             (.parse parser s ch))))
 
-(defn main []
-    (def root (-> "example.nzb" io/resource io/file 
+(defn main [f]
+    (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (into {}
           (for [m (zip-xml/xml-> root :head :meta)]
                   [(keyword (zip-xml/attr m :type))
                            (zip-xml/text m)])))
 
-(main)
+(main "test.xml")
 
 (comment
     (zip-xml/xml-> root :head :meta)

@@ -1,10 +1,9 @@
 (ns amnixiel.test
-    (:import (javax.xml.parsers SAXParser SAXParserFactory)))
-
-(require '[clojure.java.io :as io])
-(require '[clojure.xml :as xml])
-(require '[clojure.zip :as zip])
-(require '[clojure.data.zip.xml :as zip-xml])
+    (:import (javax.xml.parsers SAXParser SAXParserFactory))
+    (:require [clojure.java.io :as io]
+              [clojure.xml :as xml]
+              [clojure.zip :as zip]
+              [clojure.data.zip.xml :as zip-xml]))
 
 (defn startparse-sax
     "Skip DTDs."

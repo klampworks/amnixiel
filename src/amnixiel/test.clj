@@ -10,7 +10,9 @@
     "Skip DTDs."
     [s ch]
     (let [factory (SAXParserFactory/newInstance)]
-        (.setFeature factory "http://apache.org/xml/features/nonvalidating/load-external-dtd" false)
+        (.setFeature factory 
+            "http://apache.org/xml/features/nonvalidating/load-external-dtd"
+            false)
         (let [^SAXParser parser (.newSAXParser factory)]
             (.parse parser s ch))))
 

@@ -21,6 +21,13 @@
         (let [ssid (xml1-> m :SSID)]
                 {:essid (text (xml1-> ssid :essid))
                  :encryption (map text (xml-> ssid :encryption))})))
+
+(defn parse-gps-block [m]
+    (into {}
+        (let [gps-info (xml1-> m :gps-info)]
+            {:lon (text (xml1-> gps-info :max-lon))
+             :lat (text (xml1-> gps-info :max-lat))})))
+            
     
 (defn main [f]
     (def root (-> f io/resource io/file 
@@ -31,7 +38,8 @@
                           :last-time (attr m :last-time) 
                           :bssid (text (xml1-> m :BSSID))
                           :channel (text (xml1-> m :channel))} 
-                         (parse-ssid-block m)))))
+                         (parse-ssid-block m)
+                         (parse-gps-block m)))))
 
 (println "\n")
 (main "test-mini.xml")

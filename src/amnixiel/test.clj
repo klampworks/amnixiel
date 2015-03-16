@@ -2,8 +2,9 @@
     (:import (javax.xml.parsers SAXParser SAXParserFactory))
     (:require [clojure.java.io :as io]
               [clojure.xml :as xml]
-              [clojure.zip :as zip]
-              [clojure.data.zip.xml :as zip-xml]))
+              [clojure.zip :as zip])
+    (:use
+              [clojure.data.zip.xml]))
 
 (defn startparse-sax
     "Skip DTDs."
@@ -19,11 +20,11 @@
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (into {}
-          (for [m (zip-xml/xml-> root :wireless-network)]
+          (for [m (xml-> root :wireless-network)]
                   {
-                   :first-time (zip-xml/attr m :first-time)
-                   :last-time (zip-xml/attr m :last-time) 
-                   :bssid (zip-xml/text (zip-xml/xml1-> m :BSSID))
+                   :first-time (attr m :first-time)
+                   :last-time (attr m :last-time) 
+                   :bssid (text (xml1-> m :BSSID))
                    })))
 
 (println "\n")

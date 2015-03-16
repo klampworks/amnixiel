@@ -19,11 +19,16 @@
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (into {}
-          (for [m (zip-xml/xml-> root :head :meta)]
-                  [(keyword (zip-xml/attr m :type))
-                           (zip-xml/text m)])))
+          (for [m (zip-xml/xml-> root :wireless-network)]
+                  {
+                   :first-time (zip-xml/attr m :first-time)
+                   :last-time (zip-xml/attr m :last-time) 
+                   :bssid (zip-xml/text (zip-xml/xml1-> m :BSSID))
+                   })))
 
-(main "test.xml")
+(println "\n")
+(main "test-mini.xml")
+(println "\n")
 
 (comment
     (zip-xml/xml-> root :head :meta)

@@ -28,18 +28,20 @@
             {:lon (text (xml1-> gps-info :max-lon))
              :lat (text (xml1-> gps-info :max-lat))})))
             
+(defn parse-network-block [m]
+    (merge {:first-time (attr m :first-time)
+          :last-time (attr m :last-time) 
+          :bssid (text (xml1-> m :BSSID))
+          :channel (text (xml1-> m :channel))} 
+         (parse-ssid-block m)
+         (parse-gps-block m)))
     
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (into {}
           (for [m (xml-> root :wireless-network)]
-                  (merge {:first-time (attr m :first-time)
-                          :last-time (attr m :last-time) 
-                          :bssid (text (xml1-> m :BSSID))
-                          :channel (text (xml1-> m :channel))} 
-                         (parse-ssid-block m)
-                         (parse-gps-block m)))))
+            (parse-network-block m))))
 
 (println "\n")
 (main "test-mini.xml")

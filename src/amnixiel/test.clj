@@ -37,6 +37,15 @@
          (parse-ssid-block m)
          (parse-gps-block m)))
     
+(defn mkdesc []
+    (element :div
+        (element :p {:style "font-size:8pt;font-family:monospace;"} "(1, 2)")
+        (element :ul {}
+            (element :li {} "BSSID : 3")
+            (element :li {} "Channel : 4")
+            (element :li {} "Max Rate : 5")
+            (element :li {} "Encrypt : 6"))))
+
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))

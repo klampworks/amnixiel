@@ -50,6 +50,14 @@
     (sexp-as-element [:description {} 
         [:-cdata (strip-meta (emit-str (mkdesc-content)))]]))
 
+(defn network->kml [n]
+    (element :Placemark {}
+        (mkdesc)
+        (element :name {} "a")
+        (element :Point {}
+            (element :extrude {} "1")
+            (element :alitiudeMode {} "relativeToGround")
+            (element :coordinates {} "b,c,0"))))
 
 (defn main [f]
     (def root (-> f io/resource io/file 

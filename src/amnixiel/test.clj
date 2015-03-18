@@ -66,6 +66,12 @@
         (element :lableStyle {}
             (element :color {} value))))
 
+(defn kml [n]
+    (element :Document {}
+        (network->kml n)
+        (style->kml "red" "ff0000")
+        (style->kml "green" "00ff00")
+        (style->kml "orange" "ff7777")))
 
 (defn parse-networks [root]
     (into {}
@@ -75,10 +81,10 @@
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
-    (network->kml (parse-networks root)))
+    (kml (parse-networks root)))
 
 (println "\n")
-(main "test-mini.xml")
+(print (indent-str (main "test-mini.xml")))
 (println "\n")
 
 (defn strip-meta 

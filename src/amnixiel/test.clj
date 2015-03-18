@@ -83,9 +83,7 @@
         (style->kml "orange" "ff7777")))
 
 (defn parse-networks [root]
-    (into {}
-          (for [m (xml-> root :wireless-network)]
-            (parse-network-block m))))
+          (map #(parse-network-block %) (xml-> root :wireless-network)))
 
 (defn main [f]
     (def root (-> f io/resource io/file 

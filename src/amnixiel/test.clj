@@ -59,12 +59,15 @@
             (element :alitiudeMode {} "relativeToGround")
             (element :coordinates {} "b,c,0"))))
 
-(defn main [f]
-    (def root (-> f io/resource io/file 
-               (xml/parse startparse-sax) zip/xml-zip))
+(defn parse-networks [root]
     (into {}
           (for [m (xml-> root :wireless-network)]
             (parse-network-block m))))
+
+(defn main [f]
+    (def root (-> f io/resource io/file 
+               (xml/parse startparse-sax) zip/xml-zip))
+    (parse-networks root))
 
 (println "\n")
 (main "test-mini.xml")

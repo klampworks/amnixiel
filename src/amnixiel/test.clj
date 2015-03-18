@@ -58,7 +58,14 @@
         (element :Point {}
             (element :extrude {} "1")
             (element :alitiudeMode {} "relativeToGround")
-            (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))))
+            (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))
+        (element :styleUrl {} "#red")))
+
+(defn style->kml [id value]
+    (element :style {:id (<< "#~{id}")}
+        (element :lableStyle {}
+            (element :color {} value))))
+
 
 (defn parse-networks [root]
     (into {}

@@ -44,7 +44,7 @@
             (<< "(~(n :lon),~(n :lat))"))
         (element :ul {}
             (element :li {} (<< "BSSID : ~(n :bssid)"))
-            (element :li {} (<< "Channel : ~(n :channel))")
+            (element :li {} (<< "Channel : ~(n :channel)"))
             (element :li {} (<< "Encrypt : ~(first (n :encryption))")))))
            
 (defn mkdesc [n]

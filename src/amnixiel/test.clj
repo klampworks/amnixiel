@@ -4,6 +4,7 @@
               [clojure.xml :as xml]
               [clojure.zip :as zip])
     (:use
+              [clojure.core.strint]
               [clojure.data.xml]
               [clojure.data.zip.xml]))
 
@@ -53,11 +54,11 @@
 (defn network->kml [n]
     (element :Placemark {}
         (mkdesc)
-        (element :name {} "a")
+        (element :name {} (n :essid))
         (element :Point {}
             (element :extrude {} "1")
             (element :alitiudeMode {} "relativeToGround")
-            (element :coordinates {} "b,c,0"))))
+            (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))))
 
 (defn parse-networks [root]
     (into {}

@@ -38,12 +38,14 @@
              :lat (text (xml1-> gps-info :max-lat))}))))
             
 (defn parse-network-block [m]
-    (merge {:first-time (attr m :first-time)
-          :last-time (attr m :last-time) 
-          :bssid (text (xml1-> m :BSSID))
-          :channel (text (xml1-> m :channel))} 
-         (parse-ssid-block m)
-         (parse-gps-block m)))
+    (when-let [gps (parse-gps-block m)]
+        (when-let [ssid (parse-ssid-block m)]
+            (merge {:first-time (attr m :first-time)
+                  :last-time (attr m :last-time) 
+                  :bssid (text (xml1-> m :BSSID))
+                  :channel (text (xml1-> m :channel))} 
+                 ssid
+                 gps))))
     
 (defn mkdesc-content [n]
     (element :div {}

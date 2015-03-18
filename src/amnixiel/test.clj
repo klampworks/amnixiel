@@ -38,22 +38,22 @@
          (parse-ssid-block m)
          (parse-gps-block m)))
     
-(defn mkdesc-content []
+(defn mkdesc-content [n]
     (element :div {}
-        (element :p {:style "font-size:8pt;font-family:monospace;"} "(1, 2)")
+        (element :p {:style "font-size:8pt;font-family:monospace;"} 
+            (<< "(~(n :lon),~(n :lat))"))
         (element :ul {}
-            (element :li {} "BSSID : 3")
-            (element :li {} "Channel : 4")
-            (element :li {} "Max Rate : 5")
-            (element :li {} "Encrypt : 6"))))
+            (element :li {} (<< "BSSID : ~(n :bssid)"))
+            (element :li {} (<< "Channel : ~(n :channel))")
+            (element :li {} (<< "Encrypt : ~(first (n :encryption))")))))
            
-(defn mkdesc []
+(defn mkdesc [n]
     (sexp-as-element [:description {} 
-        [:-cdata (strip-meta (emit-str (mkdesc-content)))]]))
+        [:-cdata (strip-meta (emit-str (mkdesc-content n)))]]))
 
 (defn network->kml [n]
     (element :Placemark {}
-        (mkdesc)
+        (mkdesc n)
         (element :name {} (n :essid))
         (element :Point {}
             (element :extrude {} "1")
@@ -68,7 +68,7 @@
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
-    (parse-networks root))
+    (network->kml (parse-networks root)))
 
 (println "\n")
 (main "test-mini.xml")

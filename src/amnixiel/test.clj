@@ -18,17 +18,24 @@
         (let [^SAXParser parser (.newSAXParser factory)]
             (.parse parser s ch))))
 
+(defn or-nil [f]
+    (try
+        (f)
+         (catch Exception e nil)))
+
 (defn parse-ssid-block [m]
-    (into {}
+    (or-nil
+    #(into {}
         (let [ssid (xml1-> m :SSID)]
                 {:essid (text (xml1-> ssid :essid))
-                 :encryption (map text (xml-> ssid :encryption))})))
+                 :encryption (map text (xml-> ssid :encryption))}))))
 
 (defn parse-gps-block [m]
-    (into {}
+    (or-nil 
+    #(into {}
         (let [gps-info (xml1-> m :gps-info)]
             {:lon (text (xml1-> gps-info :max-lon))
-             :lat (text (xml1-> gps-info :max-lat))})))
+             :lat (text (xml1-> gps-info :max-lat))}))))
             
 (defn parse-network-block [m]
     (merge {:first-time (attr m :first-time)

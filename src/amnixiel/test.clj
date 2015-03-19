@@ -77,11 +77,16 @@
             (element :color {} value))))
 
 (defn kml [n]
-    (element :Document {}
-        (network->kml n)
-        (style->kml "red" "ff0000")
-        (style->kml "green" "00ff00")
-        (style->kml "orange" "ff7777")))
+    (def root (element :Document {}
+            (style->kml "red" "ff0000")
+            (style->kml "orange" "ff7777")
+            (style->kml "green" "00ff00")))
+       (-> root
+           (zip/xml-zip)
+       (zip/append-child (->Element :d {} "Quux"))
+       (zip/append-child (->Element :d {} "sdjf"))
+        )
+     )
 
 (defn parse-networks [root]
           (map #(parse-network-block %) (xml-> root :wireless-network)))

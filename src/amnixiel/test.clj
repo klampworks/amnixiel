@@ -40,8 +40,9 @@
 (defn parse-network-block [m]
     (when-let [gps (parse-gps-block m)]
         (when-let [ssid (parse-ssid-block m)]
-            (merge {:first-time (attr m :first-time)
-                  :last-time (attr m :last-time) 
+            (merge {
+                 ; :first-time (attr m :first-time)
+                 ; :last-time (attr m :last-time) 
                   :bssid (text (xml1-> m :BSSID))
                   :channel (text (xml1-> m :channel))} 
                  ssid

@@ -73,7 +73,7 @@
 
 (defn style->kml [id value]
     (element :style {:id (<< "#~{id}")}
-        (element :lableStyle {}
+        (element :LabelStyle {}
             (element :color {} value))))
 
 (defn kml [n]

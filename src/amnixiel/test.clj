@@ -55,11 +55,44 @@
         (element :ul {}
             (element :li {} (<< "BSSID : ~(n :bssid)"))
             (element :li {} (<< "Channel : ~(n :channel)"))
-            (element :li {} (<< "Encrypt : ~(first (n :encryption))")))))
+            (element :li {} (<< "Encrypt : ~(clojure.string/join \\space (n :encryption))")))))
            
 (defn mkdesc [n]
     (sexp-as-element [:description {} 
         [:-cdata (strip-meta (emit-str (mkdesc-content n)))]]))
+
+(defn ire [s]
+    (re-pattern (<< "(?i)~{s}")))
+
+(defn is-enc [s]
+    #(boolean (re-find (ire s) %)))
+
+(defn is-none [s] ((is-enc "none") s))
+(defn is-wep [s] ((is-enc "wep") s))
+(defn is-tkip [s] ((is-enc "tkip") s))
+(defn is-wpa2 [s] ((is-enc "wpa2") s))
+
+(defn score-enc [x]
+    (cond
+        (is-none x) 1
+        (is-wep x) 2
+        (is-tkip x) 3
+        (is-wpa2 x) 4
+        :else 0))
+
+(defn score-encs [encs]
+    (reduce min (map score-enc encs)))
+
+(defn pick-colour [encs]
+    (def score->colour
+        {1 :red     
+         2 :red 
+         3 :orange 
+         4 :green
+         0 :black})
+     (score->colour (score-encs encs)))
+
+(print (pick-colour '("WPA2+AES" "WPA+TKIP")))
 
 (defn network->kml [n]
     (element :Placemark {}

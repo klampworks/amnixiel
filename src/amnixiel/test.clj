@@ -101,7 +101,15 @@
          :black "ff000000"})
     (c->h c))
 
-(print (colour->hex (pick-colour '("WPA2+AES" "WPA+TKIP"))))
+(defn colour->id [c]
+    (def c->i
+        {:red "red"
+         :orange "orange"
+         :green "green"
+         :black "black"})
+     (c->i c))
+
+(print (colour->id (pick-colour '("WPA2+AES" "WPA+TKIP"))))
 
 (defn network->kml [n]
     (element :Placemark {}

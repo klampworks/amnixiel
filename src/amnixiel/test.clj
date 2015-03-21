@@ -78,9 +78,10 @@
 
 (defn kml [n]
     (def root (zip/xml-zip (element :Document {}
-            (style->kml "red" "ff0000")
-            (style->kml "orange" "ff7777")
-            (style->kml "green" "00ff00"))))
+            ; Colours are 0xaabbggrr
+            (style->kml "red" "ff0000ff")
+            (style->kml "orange" "ff00a0ff")
+            (style->kml "green" "ff00ff00"))))
     (defn app [e] (zip/append-child root e))
         (reduce #(
            zip/append-child %1 (network->kml %2)) root (remove nil? n)))

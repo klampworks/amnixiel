@@ -92,7 +92,16 @@
          0 :black})
      (score->colour (score-encs encs)))
 
-(print (pick-colour '("WPA2+AES" "WPA+TKIP")))
+(defn colour->hex [c]
+    ; Colours are 0xaabbggrr
+    (def c->h
+        {:red "ff0000ff"
+         :orange "ff00a0ff"
+         :green "ff00ff00"
+         :black "ff000000"})
+    (c->h c))
+
+(print (colour->hex (pick-colour '("WPA2+AES" "WPA+TKIP"))))
 
 (defn network->kml [n]
     (element :Placemark {}

@@ -121,17 +121,17 @@
             (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))
         (element :styleUrl {} "#red")))
 
-(defn style->kml [id value]
-    (element :style {:id (<< "#~{id}")}
+(defn style->kml [c]
+    (element :style {:id (colour->id c)}
         (element :LabelStyle {}
-            (element :color {} value))))
+            (element :color {} (colour->hex c)))))
 
 (defn kml [n]
     (def root (zip/xml-zip (element :Document {}
-            ; Colours are 0xaabbggrr
-            (style->kml "red" "ff0000ff")
-            (style->kml "orange" "ff00a0ff")
-            (style->kml "green" "ff00ff00"))))
+            (style->kml :red)
+            (style->kml :orange)
+            (style->kml :green)
+            (style->kml :black))))
     (defn app [e] (zip/append-child root e))
         (reduce #(
            zip/append-child %1 (network->kml %2)) root (remove nil? n)))

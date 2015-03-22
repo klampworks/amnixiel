@@ -2,11 +2,19 @@
     (:import (javax.xml.parsers SAXParser SAXParserFactory))
     (:require [clojure.java.io :as io]
               [clojure.xml :as xml]
+              [amnixiel.colours :as colours]
               [clojure.zip :as zip])
     (:use
               [clojure.core.strint]
               [clojure.data.xml]
               [clojure.data.zip.xml]))
+
+(defn strip-meta 
+    "Strip the initial <?xml enocding=blah?> from an xml string.
+     It does not look like the Clojure data.xml library provides an alternative
+     for not printing this metadata."
+     [xml-str]
+    (clojure.string/replace xml-str #"<\?[^>]+\?>" ""))
 
 (defn startparse-sax
     "Skip DTDs."
@@ -48,6 +56,12 @@
                  ssid
                  gps))))
     
+(def test-xml (element :foo {:foo-attr "foo value"}
+                     (element :bar {:bar-attr "bar value"}
+                       (element :baz {} "The baz value1")
+                       (element :baz {} "The baz value2")
+                       (element :baz {} "The baz value3"))))
+
 (defn mkdesc-content [n]
     (element :div {}
         (element :p {:style "font-size:8pt;font-family:monospace;"} 
@@ -61,56 +75,6 @@
     (sexp-as-element [:description {} 
         [:-cdata (strip-meta (emit-str (mkdesc-content n)))]]))
 
-(defn ire [s]
-    (re-pattern (<< "(?i)~{s}")))
-
-(defn is-enc [s]
-    #(boolean (re-find (ire s) %)))
-
-(defn is-none [s] ((is-enc "none") s))
-(defn is-wep [s] ((is-enc "wep") s))
-(defn is-tkip [s] ((is-enc "tkip") s))
-(defn is-wpa2 [s] ((is-enc "wpa2") s))
-
-(defn score-enc [x]
-    (cond
-        (is-none x) 1
-        (is-wep x) 2
-        (is-tkip x) 3
-        (is-wpa2 x) 4
-        :else 99))
-
-(defn score-encs [encs]
-    (reduce min (map score-enc encs)))
-
-(defn pick-colour [encs]
-    (def score->colour
-        {1 :red     
-         2 :red 
-         3 :orange 
-         4 :green
-         99 :black})
-     (score->colour (score-encs encs)))
-
-(defn colour->hex [c]
-    ; Colours are 0xaabbggrr
-    (def c->h
-        {:red "ff0000ff"
-         :orange "ff00a0ff"
-         :green "ff00ff00"
-         :black "ff000000"})
-    (c->h c))
-
-(defn colour->id [c]
-    (def c->i
-        {:red "red"
-         :orange "orange"
-         :green "green"
-         :black "black"})
-     (c->i c))
-
-(print (colour->id (pick-colour '("WPA2+AES" "WPA+TKIP"))))
-
 (defn network->kml [n]
     (element :Placemark {}
         (mkdesc n)
@@ -120,12 +84,16 @@
             (element :alitiudeMode {} "relativeToGround")
             (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))
         (element :styleUrl {} 
-            (<< "#~(colour->id (pick-colour (n :encryption)))"))))
+            (<< "#~(colours/colour->id (colours/pick-colour (n :encryption)))"))))
+
+;(print (main "test.xml"))
+
+;(print (indent-str (first (main "test.xml"))))
 
 (defn style->kml [c]
-    (element :style {:id (colour->id c)}
+    (element :style {:id (colours/colour->id c)}
         (element :LabelStyle {}
-            (element :color {} (colour->hex c)))))
+            (element :color {} (colours/colour->hex c)))))
 
 (defn kml [n]
     (def root (zip/xml-zip (element :Document {}
@@ -144,15 +112,21 @@
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
     (kml (parse-networks root)))
+    ;(parse-networks root))
 
-(println "\n")
-(print (indent-str (main "test-mini.xml")))
-(println "\n")
+;(print (indent-str (main "test-mini.xml")))
+;(print (first (main "test.xml")))
+;(print (main "test.xml"))
+;(print (first (main "test.xml")))
+;(print "\n>>\n\n")
+;(print (indent-str (first (main "test.xml"))))
+;(println "\n")
 
-(defn strip-meta 
-    "Strip the initial <?xml enocding=blah?> from an xml string.
-     It does not look like the Clojure data.xml library provides an alternative
-     for not printing this metadata."
-     [xml-str]
-    (clojure.string/replace xml-str #"<\?[^>]+\?>" ""))
+;(def test-xml (element :foo {:foo-attr "foo value"}
+;                     (element :bar {:bar-attr "bar value"}
+;                       (element :baz {} "The baz value1")
+;                       (element :baz {} "The baz value2")
+;                       (element :baz {} "The baz value3"))))
+
+;(print (strip-meta (indent-str (mkdesc))))
 

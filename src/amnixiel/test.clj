@@ -78,7 +78,7 @@
         (is-wep x) 2
         (is-tkip x) 3
         (is-wpa2 x) 4
-        :else 0))
+        :else 99))
 
 (defn score-encs [encs]
     (reduce min (map score-enc encs)))
@@ -89,7 +89,7 @@
          2 :red 
          3 :orange 
          4 :green
-         0 :black})
+         99 :black})
      (score->colour (score-encs encs)))
 
 (defn colour->hex [c]

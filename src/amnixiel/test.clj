@@ -119,7 +119,8 @@
             (element :extrude {} "1")
             (element :alitiudeMode {} "relativeToGround")
             (element :coordinates {} (<< "~(n :lon),~(n :lat),0")))
-        (element :styleUrl {} "#red")))
+        (element :styleUrl {} 
+            (<< "#~(colour->id (pick-colour (n :encryption)))"))))
 
 (defn style->kml [c]
     (element :style {:id (colour->id c)}

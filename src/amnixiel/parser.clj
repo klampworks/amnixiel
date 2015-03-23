@@ -1,11 +1,7 @@
 (ns amnixiel.parser
     (:import (javax.xml.parsers SAXParser SAXParserFactory))
     (:use
-    ;          [clojure.core.strint]
-    ;          [clojure.data.xml]
               [clojure.data.zip.xml]))
-    ;)
-    ;)
 
 (defn or-nil [f]
     (try

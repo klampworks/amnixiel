@@ -3,6 +3,7 @@
     (:require [clojure.java.io :as io]
               [clojure.xml :as xml]
               [amnixiel.colours :as colours]
+              [amnixiel.parser :as parser]
               [clojure.zip :as zip])
     (:use
               [clojure.core.strint]
@@ -15,16 +16,6 @@
      for not printing this metadata."
      [xml-str]
     (clojure.string/replace xml-str #"<\?[^>]+\?>" ""))
-
-(defn startparse-sax
-    "Skip DTDs."
-    [s ch]
-    (let [factory (SAXParserFactory/newInstance)]
-        (.setFeature factory 
-            "http://apache.org/xml/features/nonvalidating/load-external-dtd"
-            false)
-        (let [^SAXParser parser (.newSAXParser factory)]
-            (.parse parser s ch))))
 
 (defn or-nil [f]
     (try
@@ -110,7 +101,7 @@
 
 (defn main [f]
     (def root (-> f io/resource io/file 
-               (xml/parse startparse-sax) zip/xml-zip))
+               (xml/parse parser/startparse-sax) zip/xml-zip))
     (print (indent-str (first (kml (parse-networks root))))))
     ;(parse-networks root))
 

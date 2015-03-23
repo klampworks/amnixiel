@@ -111,7 +111,7 @@
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse startparse-sax) zip/xml-zip))
-    (kml (parse-networks root)))
+    (print (indent-str (first (kml (parse-networks root))))))
     ;(parse-networks root))
 
 ;(print (indent-str (main "test-mini.xml")))

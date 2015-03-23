@@ -17,36 +17,6 @@
      [xml-str]
     (clojure.string/replace xml-str #"<\?[^>]+\?>" ""))
 
-(defn or-nil [f]
-    (try
-        (f)
-         (catch Exception e nil)))
-
-(defn parse-ssid-block [m]
-    (or-nil
-    #(into {}
-        (let [ssid (xml1-> m :SSID)]
-                {:essid (text (xml1-> ssid :essid))
-                 :encryption (map text (xml-> ssid :encryption))}))))
-
-(defn parse-gps-block [m]
-    (or-nil 
-    #(into {}
-        (let [gps-info (xml1-> m :gps-info)]
-            {:lon (text (xml1-> gps-info :max-lon))
-             :lat (text (xml1-> gps-info :max-lat))}))))
-            
-(defn parse-network-block [m]
-    (when-let [gps (parse-gps-block m)]
-        (when-let [ssid (parse-ssid-block m)]
-            (merge {
-                 ; :first-time (attr m :first-time)
-                 ; :last-time (attr m :last-time) 
-                  :bssid (text (xml1-> m :BSSID))
-                  :channel (text (xml1-> m :channel))} 
-                 ssid
-                 gps))))
-    
 (def test-xml (element :foo {:foo-attr "foo value"}
                      (element :bar {:bar-attr "bar value"}
                        (element :baz {} "The baz value1")
@@ -96,13 +66,10 @@
         (reduce #(
            zip/append-child %1 (network->kml %2)) root (remove nil? n)))
 
-(defn parse-networks [root]
-          (map #(parse-network-block %) (xml-> root :wireless-network)))
-
 (defn main [f]
     (def root (-> f io/resource io/file 
                (xml/parse parser/startparse-sax) zip/xml-zip))
-    (print (indent-str (first (kml (parse-networks root))))))
+    (print (indent-str (first (kml (parser/parse-networks root))))))
     ;(parse-networks root))
 
 ;(print (indent-str (main "test-mini.xml")))

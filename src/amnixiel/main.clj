@@ -7,10 +7,13 @@
 
 (defn main [& [f]]
     (print 
-        (emitter/kml (map #(parser/parse-networks 
-                (-> % io/resource io/file 
-                  (xml/parse parser/startparse-sax) zip/xml-zip)) 
-             *command-line-args*))))
+        ;(emitter/kml 
+        (reduce #(concat %1
+                (parser/parse-networks 
+                (-> %2 io/resource io/file 
+                  (xml/parse parser/startparse-sax) zip/xml-zip)))
+             '() *command-line-args*)))
+        ;     )
 
     ;(print (clojure.data.xml/indent-str 
     ;    (first (emitter/kml (parser/parse-networks root))))))

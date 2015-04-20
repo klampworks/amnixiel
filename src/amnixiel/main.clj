@@ -1,4 +1,4 @@
-(ns amnixiel.test
+(ns amnixiel.main
     (:require [clojure.java.io :as io]
               [clojure.xml :as xml]
               [amnixiel.parser :as parser]

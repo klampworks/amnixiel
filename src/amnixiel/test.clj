@@ -4,18 +4,12 @@
               [clojure.xml :as xml]
               [amnixiel.colours :as colours]
               [amnixiel.parser :as parser]
+              [amnixiel.emitter :as emitter]
               [clojure.zip :as zip])
     (:use
               [clojure.core.strint]
               [clojure.data.xml]
               [clojure.data.zip.xml]))
-
-(defn strip-meta 
-    "Strip the initial <?xml enocding=blah?> from an xml string.
-     It does not look like the Clojure data.xml library provides an alternative
-     for not printing this metadata."
-     [xml-str]
-    (clojure.string/replace xml-str #"<\?[^>]+\?>" ""))
 
 (def test-xml (element :foo {:foo-attr "foo value"}
                      (element :bar {:bar-attr "bar value"}
@@ -34,7 +28,7 @@
            
 (defn mkdesc [n]
     (sexp-as-element [:description {} 
-        [:-cdata (strip-meta (emit-str (mkdesc-content n)))]]))
+        [:-cdata (emitter/strip-meta (emit-str (mkdesc-content n)))]]))
 
 (defn network->kml [n]
     (element :Placemark {}

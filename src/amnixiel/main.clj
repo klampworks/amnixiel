@@ -10,6 +10,6 @@
         (emitter/kml 
             (reduce #(concat %1
                 (parser/parse-networks 
-                (-> %2 io/resource io/file 
+                (-> %2 io/file 
                   (xml/parse parser/startparse-sax) zip/xml-zip)))
              '() *command-line-args*))))))

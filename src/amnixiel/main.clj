@@ -6,7 +6,7 @@
               [clojure.zip :as zip]))
 (defn open [fs]
     (let [r (group-by #(.exists %) (map io/file fs))]
-        (for [dne (r false)]
+        (doseq [dne (r false)]
             (println "File " dne " does not exist. Skipping..."))
         (r true)))
 

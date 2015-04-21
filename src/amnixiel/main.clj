@@ -8,7 +8,7 @@
     (let [r (group-by #(.exists %) (map io/file fs))]
         (doseq [dne (r false)]
             (binding [*out* *err*]
-                (println "File " dne " does not exist. Skipping...")))
+                (println "File " (.getName dne) " does not exist. Skipping...")))
         (r true)))
 
 (defn main [& [f]]

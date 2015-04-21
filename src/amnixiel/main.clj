@@ -5,7 +5,10 @@
               [amnixiel.emitter :as emitter]
               [clojure.zip :as zip]))
 (defn open [fs]
-    (map io/file fs))
+    (let [r (group-by #(.exists %) (map io/file fs))]
+        (for [dne (r false)]
+            (println "File " dne " does not exist. Skipping..."))
+        (r true)))
 
 (defn main [& [f]]
     (print (clojure.data.xml/indent-str (first

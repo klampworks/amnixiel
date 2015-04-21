@@ -4,12 +4,14 @@
               [amnixiel.parser :as parser]
               [amnixiel.emitter :as emitter]
               [clojure.zip :as zip]))
+(defn open [fs]
+    (map io/file fs))
 
 (defn main [& [f]]
     (print (clojure.data.xml/indent-str (first
         (emitter/kml 
             (reduce #(concat %1
                 (parser/parse-networks 
-                (-> %2 io/file 
+                (-> %2 
                   (xml/parse parser/startparse-sax) zip/xml-zip)))
-             '() *command-line-args*))))))
+             '() (open *command-line-args*)))))))

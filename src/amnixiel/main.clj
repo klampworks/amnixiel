@@ -15,7 +15,11 @@
 (defn parse [f]
     (try  (-> f 
             (xml/parse parser/startparse-sax) zip/xml-zip)
-        (catch Exception ex nil)))
+        (catch Exception ex 
+            (binding [*out* *err*]
+                (println "File " (.getName f) " could not be parsed. Skipping...")
+                nil))))
+
 
 (defn main [& [f]]
     (print (clojure.data.xml/indent-str (first

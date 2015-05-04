@@ -5,20 +5,22 @@
               [amnixiel.emitter :as emitter]
               [clojure.zip :as zip]))
 
+(defn err [& msg]
+    (binding [*out* *err*]
+        (println (clojure.string/join msg))))
+    
 (defn open [fs]
     (let [r (group-by #(.exists %) (map io/file fs))]
         (doseq [dne (r false)]
-            (binding [*out* *err*]
-                (println "File " (.getName dne) " does not exist. Skipping...")))
+                (err "File " (.getName dne) " does not exist. Skipping..."))
         (r true)))
 
 (defn parse [f]
     (try  (-> f 
             (xml/parse parser/startparse-sax) zip/xml-zip)
         (catch Exception ex 
-            (binding [*out* *err*]
-                (println "File " (.getName f) " could not be parsed. Skipping...")
-                nil))))
+            (err "File " (.getName f) " could not be parsed. Skipping...")
+                nil)))
 
 
 (defn main [& [f]]

@@ -23,7 +23,7 @@
                 nil)))
 
 
-(defn main [& [f]]
+(defn main [& f]
     (print (clojure.data.xml/indent-str (first
         (emitter/kml 
             (reduce #(concat %1

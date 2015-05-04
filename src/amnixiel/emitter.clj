@@ -15,7 +15,7 @@
 
 (defn mkdesc-content [n]
     (element :div {}
-        (element :p {:style "font-size:8pt;font-family:monospace;"} 
+        (element :p {:Style "font-size:8pt;font-family:monospace;"} 
             (<< "(~(n :lon),~(n :lat))"))
         (element :ul {}
             (element :li {} (<< "BSSID : ~(n :bssid)"))
@@ -38,7 +38,7 @@
             (<< "#~(colours/colour->id (colours/pick-colour (n :encryption)))"))))
 
 (defn style->kml [c]
-    (element :style {:id (colours/colour->id c)}
+    (element :Style {:id (colours/colour->id c)}
         (element :LabelStyle {}
             (element :color {} (colours/colour->hex c)))))
 

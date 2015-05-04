@@ -22,7 +22,9 @@
         :else 99))
 
 (defn score-encs [encs]
-    (reduce min (map score-enc encs)))
+    (if (empty? encs)
+        (score-enc "")
+        (reduce min (map score-enc encs))))
 
 (defn pick-colour [encs]
     (def score->colour

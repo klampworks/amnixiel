@@ -11,7 +11,7 @@
 (defn is-none [s] ((is-enc "none") s))
 (defn is-wep [s] ((is-enc "wep") s))
 (defn is-tkip [s] ((is-enc "tkip") s))
-(defn is-wpa2 [s] ((is-enc "wpa2") s))
+(defn is-wpa2 [s] ((is-enc "wpa") s))
 
 (defn score-enc [x]
     (cond

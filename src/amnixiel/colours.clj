@@ -29,8 +29,8 @@
 (defn pick-colour [encs]
     (def score->colour
         {1 :red     
-         2 :red 
-         3 :orange 
+         2 :orange 
+         3 :yellow 
          4 :green
          99 :black})
      (score->colour (score-encs encs)))
@@ -40,6 +40,7 @@
     (def c->h
         {:red "ff0000ff"
          :orange "ff00a0ff"
+         :yellow "ff00faff"
          :green "ff00ff00"
          :black "ff000000"})
     (c->h c))
@@ -48,6 +49,7 @@
     (def c->i
         {:red "red"
          :orange "orange"
+         :yellow "yellow"
          :green "green"
          :black "black"})
      (c->i c))

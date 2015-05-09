@@ -1,4 +1,5 @@
 (ns amnixiel.main
+    (:gen-class)
     (:require [clojure.java.io :as io]
               [clojure.xml :as xml]
               [amnixiel.parser :as parser]

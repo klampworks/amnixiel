@@ -23,11 +23,16 @@
             (err "File " (.getName f) " could not be parsed. Skipping...")
                 nil)))
 
+(defn argv [f]
+    "I don't fucking know..."
+    (if
+        (not (nil? f)) f
+        *command-line-args*))
 
-(defn main [& f]
-    (print (clojure.data.xml/indent-str (first
+(defn -main [& f]
+    (println (clojure.data.xml/indent-str (first
         (emitter/kml 
             (reduce #(concat %1
                 (if-let [f (parse %2)]
                     (parser/parse-networks f)))
-             '() (open *command-line-args*)))))))
+             '() (open (argv f))))))))

@@ -43,6 +43,14 @@
                  ssid
                  gps))))
     
+(defn uniq [in]
+    (loop [src in acc () se #{}]
+        (let [f (first src) b (:bssid f)]
+            (cond 
+                (not (seq src)) acc
+                (contains? se b) (recur (rest src) acc se)
+                :else (recur (rest src) (conj acc f) (conj se b))))))
+    
 (defn parse-networks [root]
-          (map #(parse-network-block %) (xml-> root :wireless-network)))
+    (uniq (map #(parse-network-block %) (xml-> root :wireless-network))))
 

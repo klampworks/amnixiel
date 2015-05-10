@@ -6,7 +6,7 @@ Amnixiel is a Kismet to KML converter for visualising war-driving data.
 
 About
 ===
-Amnixiel takes the output of Kismet, the popular wireless network detector, as input and extracts relvant information about each access point such as Network Name, supported Encryption schemes and GPS coordinates. This information is structured into KML format and printed to standard out. This KML data can then by loaded into Google Earth to visualise the location of wireless access points.
+Amnixiel takes the output of Kismet, the popular wireless network detector, as input and extracts relevant information about each access point such as Network Name, supported Encryption schemes and GPS coordinates. This information is structured into KML format and printed to standard out. This KML data can then by loaded into Google Earth to visualise the location of wireless access points.
 
 Installation
 ===
@@ -54,3 +54,5 @@ All KML is printed to the stdout stream. All warnings and errors are sent to std
 ![Alt screenshot](screenshot.jpg)
 
 Networks are colour coded based on their weakest supported encryption scheme.
+
+Duplicate networks are filtered based on BSSID not ESSID. Hence, duplicate network names in the output represent distinct hardware.
